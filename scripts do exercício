@@ -1,0 +1,547 @@
+SCRIPT DO SWITCH 01 
+
+enable
+configure terminal
+hostname SW-01
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole
+login
+exit
+Username administrador privilege 15 secret SenhaAdimin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+vlan 10
+name TESTES
+exit
+vlan 20
+name TELEMARKETING
+exit
+vlan 30
+name CONSULTORES
+exit
+vlan 40
+name RH
+exit
+interface fastethernet0/1
+switchport mode access
+switch access vlan 10
+interface fastethernet0/10
+switchport mode access
+switch access vlan 20
+interface fastethernet0/18
+switchport mode access
+switchport access vlan 30
+interface fastethernet0/23
+switchport mode access 
+switchport access vlan 40
+interface vlan 1
+ip address 192.168.31.254 255.255.224.0
+description REDE 1
+no shutdown
+exit
+ip default-gateway 192.168.0.1
+interface fastethernet0/5
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 10
+switchport trunk allowed vlan add 20
+switchport trunk allowed vlan add 30
+switchport trunk allowed vlan add 40
+exit
+do wr
+
+SCRIPT DO SWITCH 02 
+
+enable
+configure terminal
+hostname SW-02
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole
+login
+exit
+Username administrador privilege 15 secret SenhaAdimin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+vlan 50
+name ANALISTAS
+exit
+vlan 60
+name OPERACAO
+exit
+vlan 70
+name TI
+exit
+vlan 80
+name ADMINISTRATIVO
+exit
+interface fastethernet0/1
+switchport mode access
+switch access vlan 50
+interface fastethernet0/24
+switchport mode access
+switch access vlan 60
+interface fastethernet0/21
+switchport mode access
+switchport access vlan 70
+interface fastethernet0/22
+switchport mode access 
+switchport access vlan 80
+interface vlan 1
+ip address 10.255.255.254 255.0.0.0
+description REDE 2
+no shutdown
+exit
+ip default-gateway 10.0.0.1
+interface fastethernet0/10
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 50
+switchport trunk allowed vlan add 60
+switchport trunk allowed vlan add 70
+switchport trunk allowed vlan add 80
+exit
+do wr
+
+SCRIPT DO SWITCH 03 
+
+enable
+configure terminal
+hostname SW-03
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole
+login
+exit
+Username administrador privilege 15 secret SenhaAdimin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+vlan 80
+name FINANCIAS
+exit
+vlan 60
+name OPERACOES
+exit
+vlan 88
+name RELOGIOS
+exit
+vlan 100
+name LIVRE
+exit
+interface fastethernet0/1
+switchport mode access
+switch access vlan 80
+interface fastethernet0/6
+switchport mode access
+switch access vlan 60
+interface fastethernet0/10
+switchport mode access
+switchport access vlan 88
+interface fastethernet0/20
+switchport mode access 
+switchport access vlan 100
+interface vlan 1
+ip address 192.168.248.254 255.255.248.0
+description REDE 3
+no shutdown
+exit
+ip default-gateway 192.168.32.1
+interface fastethernet0/15
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 80
+switchport trunk allowed vlan add 60
+switchport trunk allowed vlan add 88
+switchport trunk allowed vlan add 100
+exit
+do wr
+
+SCRIPT SWITCH 04
+
+enable
+configure terminal
+hostname SW-04
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole
+login
+exit
+Username administrador privilege 15 secret SenhaAdimin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+vlan 88
+name SERVIDORES
+exit
+vlan 200
+name VOZ
+exit
+vlan 90
+NAME TACAS
+exit
+vlan 88
+name MONITORAMENTO
+exit
+interface fastethernet0/1
+switchport mode access
+switch access vlan 88
+interface fastethernet0/10
+switchport mode access
+switch access vlan 200
+interface fastethernet0/13
+switchport mode access
+switchport access vlan 90
+interface fastethernet0/15
+switchport mode access 
+switchport access vlan 88
+interface vlan 1
+ip address 172.240.255.254 255.240.0.0
+description REDE 4
+no shutdown
+exit
+ip default-gateway 172.16.0.1
+interface fastethernet0/20
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 88
+switchport trunk allowed vlan add 200
+switchport trunk allowed vlan add 90
+switchport trunk allowed vlan add 88
+exit
+do wr
+
+SCRIPT ROUTER 01 
+
+enable
+configure terminal
+hostname RT-01
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole 
+login
+exit
+Username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+interface gigabitethernet 0/1
+ip address 192.168.0.1 255.255.224.0
+description REDE 1
+no shutdown 
+exit
+login block-for 180 attempts 3 within 60
+security passwords min-length 8
+interface serial 0/0/1
+ip route 10.0.0.0 255.0.0.0 200.200.200.2
+interface serial 0/0/1
+no shutdown
+interface serial 0/1/1
+ip route 192.168.32.0 255.255.248.0 200.200.200.4
+interface serial 0/1/1
+no shutdown
+interface serial 0/0/0
+ip route 172.16.0.0 255.240.0.0 200.200.200.6
+interface serial 0/0/0
+no shutdown
+EXIT
+interface g0/0.10
+encapsulation dot1q 10
+ip address 192.168.0.1 255.255.224.0
+exit
+interface g0/0.20
+encapsulation dot1q 20
+ip address 192.168.0.1 255.255.224.0
+exit
+interface g0/0.30
+encapsulation dot1q 30
+ip address 192.168.0.1 255.255.224.0
+exit
+interface g0/0.40
+encapsulation dot1q 40
+ip address 192.168.0.1 255.255.224.0
+exit
+
+ip route 201.187.89.8 255.255.255.252 200.200.200.2
+ip route 201.187.89.8 255.255.255.252 200.200.200.4
+ip route 10.0.0.0 255.0.0.0 200.200.200.2
+ip route 10.0.0.0 255.0.0.0 200.200.200.4
+ip route 192.168.32.0 255.255.248.0 200.200.200.2
+ip route 192.168.32.0 255.255.248.0 200.200.200.4
+
+ip route 201.187.89.16 255.255.255.252 200.200.200.2
+ip route 201.187.89.16 255.255.255.252 200.200.200.6
+ip route 10.0.0.0 255.0.0.0 200.200.200.2
+ip route 10.0.0.0 255.0.0.0 200.200.200.6
+ip route 172.16.0.0 255.240.0.0 200.200.200.2
+ip route 172.16.0.0 255.240.0.0 200.200.200.6
+
+ip route 201.187.89.12 255.255.255.252 200.200.200.6
+ip route 201.187.89.12 255.255.255.252 200.200.200.4
+ip route 172.16.0.0 255.240.0.0 200.200.200.6
+ip route 172.16.0.0 255.240.0.0 200.200.200.4
+ip route 192.168.32.0 255.255.248.0 200.200.200.6
+ip route 192.168.32.0 255.255.248.0 200.200.200.4
+do wr
+
+SCRIPT ROUTER 02
+
+enable
+configure terminal
+hostname RT-02
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole 
+login
+exit
+Username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+interface gigabitethernet 0/1
+ip address 10.0.0.1 255.0.0.0
+description REDE 2
+no shutdown 
+exit
+login block-for 180 attempts 3 within 60
+security passwords min-length 8
+interface serial 0/0/1
+ip route 192.168.0.0 255.255.224.0 200.200.200.1
+interface serial 0/0/1
+no shutdown
+interface serial 0/0/0
+ip route 192.168.32.0 255.255.248.0 200.200.200.8
+interface serial 0/0/0
+no shutdown
+interface serial 0/1/1
+ip route 172.16.0.0 255.240.0.0 200.200.200.10
+interface serial 0/1/1
+no shutdown
+exit
+interface g0/0.50
+encapsulation dot1q 50
+ip address 10.0.0.1 255.0.0.0
+exit
+interface g0/0.60
+encapsulation dot1q 60
+ip address 10.0.0.1 255.0.0.0
+exit
+interface g0/0.70
+encapsulation dot1q 70
+ip address 10.0.0.1 255.0.0.0
+exit
+interface g0/0.80
+encapsulation dot1q 80
+ip address 10.0.0.1 255.0.0.0
+exit
+
+ip route 201.187.89.0 255.255.255.252 200.200.200.1
+ip route 201.187.89.0 255.255.255.252 200.200.200.10
+ip route 192.168.0.0 255.255.224.0 200.200.200.1
+ip route 192.168.0.0 255.255.224.0 200.200.200.10
+ip route 172.16.0.0 255.240.0.0 200.200.200.1
+ip route 172.16.0.0 255.240.0.0 200.200.200.10
+
+ip route 201.187.89.20 255.255.255.252 200.200.200.1
+ip route 201.187.89.20 255.255.255.252 200.200.200.8
+ip route 192.168.0.0 255.255.224.0 200.200.200.1
+ip route 192.168.0.0 255.255.224.0 200.200.200.8
+ip route 192.168.32.0 255.255.248.0 200.200.200.1
+ip route 192.168.32.0 255.255.248.0 200.200.200.8
+
+ip route 201.187.89.12 255.255.255.252 200.200.200.8
+ip route 201.187.89.12 255.255.255.252 200.200.200.10
+ip route 192.168.32.0 255.255.248.0 200.200.200.8
+ip route 192.168.32.0 255.255.248.0 200.200.200.10
+ip route 172.16.0.0 255.240.0.0 200.200.200.8
+ip route 172.16.0.0 255.240.0.0 200.200.200.10
+do wr
+
+SCRIPT ROUTER 03
+
+enable
+configure terminal
+hostname RT-03
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole 
+login
+exit
+Username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+interface gigabitethernet 0/1
+ip address 192.168.32.1 255.255.248.0
+description REDE 3
+no shutdown 
+exit
+login block-for 180 attempts 3 within 60
+security passwords min-length 8
+interface serial 0/1/1
+ip route 192.168.0.0 255.255.224.0 200.200.200.3
+interface serial 0/1/1
+no shutdown
+interface serial 0/0/0
+ip route 10.0.0.0 255.0.0.0 200.200.200.7
+interface serial 0/0/0
+no shutdown
+interface serial 0/0/1
+ip route 172.16.0.0 255.240.0.0 200.200.200.12
+interface serial 0/0/1
+no shutdown
+exit
+interface g0/0.80
+encapsulation dot1q 80
+ip address 192.168.32.1 255.255.248.0
+exit
+interface g0/0.60
+encapsulation dot1q 60
+ip address 192.168.32.1 255.255.248.0
+exit
+interface g0/0.88
+encapsulation dot1q 88
+ip address 192.168.32.1 255.255.248.0
+exit
+interface g0/0.100
+encapsulation dot1q 100
+ip address 192.168.32.1 255.255.248.0
+exit
+
+ip route 201.187.89.16 255.255.255.252 200.200.200.7
+ip route 201.187.89.16 255.255.255.252 200.200.200.12
+ip route 10.0.0.0 255.0.0.0 200.200.200.7
+ip route 10.0.0.0 255.0.0.0 200.200.200.12
+ip route 172.16.0.0 255.240.0.0 200.200.200.7
+ip route 172.16.0.0 255.240.0.0 200.200.200.12
+
+ip route 201.187.89.4 255.255.255.252 200.200.200.3 
+ip route 201.187.89.4 255.255.255.252 200.200.200.7
+ip route 192.168.0.0 255.255.224.0 200.200.200.3
+ip route 192.168.0.0 255.255.224.0 200.200.200.7
+ip route 10.0.0.0 255.0.0.0 200.200.200.3
+ip route 10.0.0.0 255.0.0.0 200.200.200.7
+
+
+ip route 201.187.89.0 255.255.255.252 200.200.200.3
+ip route 201.187.89.0 255.255.255.252 200.200.200.12
+ip route 192.168.0.0 255.255.224.0 200.200.200.3
+ip route 192.168.0.0 255.255.224.0 200.200.200.12
+ip route 172.16.0.0 255.240.0.0 200.200.200.3
+ip route 172.16.0.0 255.240.0.0 200.200.200.12
+do wr
+
+SCRIPT ROUTER 04 
+
+enable
+configure terminal
+hostname RT-04
+banner motd " APENAS ACESSE SE FOR AUTORIZADO "
+enable secret SenhaEnable
+line console 0
+password SenhaConsole 
+login
+exit
+Username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+service password-encryption
+interface gigabitethernet 0/1
+ip address 172.16.0.1 255.240.0.0
+description REDE 4
+no shutdown 
+exit
+login block-for 180 attempts 3 within 60
+security passwords min-length 8
+interface serial 0/0/0
+ip route 192.168.0.0 255.255.224.0 200.200.200.5
+interface serial 0/0/0
+no shutdown
+interface serial 0/1/1
+ip route 10.0.0.0 255.0.0.0 200.200.200.9
+interface serial 0/1/1
+no shutdown
+interface serial 0/0/1
+ip route 192.168.32.0 255.255.248.0 200.200.200.11
+interface serial 0/0/1
+no shutdown
+exit
+interface g0/0.88
+encapsulation dot1q 88
+ip address 172.16.0.1 255.240.0.0
+exit
+interface g0/0.200
+encapsulation dot1q 200
+ip address 172.16.0.1 255.240.0.0
+exit
+interface g0/0.90
+encapsulation dot1q 90
+ip address 172.16.0.1 255.240.0.0
+exit
+interface g0/0.88
+encapsulation dot1q 88
+ip address 172.16.0.1 255.240.0.0
+exit
+ip route 201.187.89.20 255.255.255.252 200.200.200.11
+ip route 201.187.89.20 255.255.255.252 200.200.200.5
+ip route 192.168.32.0 255.255.248.0 200.200.200.11
+ip route 192.168.32.0 255.255.248.0 200.200.200.5
+ip route 192.168.0.0 255.255.224.0 200.200.200.11
+ip route 192.168.0.0 255.255.224.0 200.200.200.5
+
+ip route 201.187.89.8 255.255.255.252 200.200.200.11
+ip route 201.187.89.8 255.255.255.252 200.200.200.9
+ip route 192.168.32.0 255.255.248.0 200.200.200.11
+ip route 192.168.32.0 255.255.248.0 200.200.200.9
+ip route 10.0.0.0 255.0.0.0 200.200.200.11
+ip route 10.0.0.0 255.0.0.0 200.200.200.9
+
+ip route 201.187.89.4 255.255.255.252 200.200.200.9
+ip route 201.187.89.4 255.255.255.252 200.200.200.5
+ip route 192.168.0.0 255.255.224.0 200.200.200.9
+ip route 192.168.0.0 255.255.224.0 200.200.200.5
+ip route 10.0.0.0 255.0.0.0 200.200.200.9
+ip route 10.0.0.0 255.0.0.0 200.200.200.5
+do wr
